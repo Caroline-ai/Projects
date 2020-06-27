@@ -2,6 +2,8 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using System.IO;
+using System.Collections.Generic;
 
 
 
@@ -27,10 +29,16 @@ namespace Wisielec
                 int action = int.Parse(Console.ReadLine());
                 switch (action)
                 {
-                    case 1: Console.WriteLine("Roczynamy grę");
+                    case 1:
+                        Console.Clear();
+                        Console.WriteLine("Roczynamy grę");
                         Game();
                         break;
-                    case 2: Console.WriteLine("Edycja słownika");
+
+                    case 2:
+                        Console.Clear();
+                        Console.WriteLine("Edycja słownika");
+                        Edit();
                         break;
                 }
             }
@@ -45,15 +53,20 @@ namespace Wisielec
         private static void Game()
         {
 
-       
-         Start: 
-            Regex wincheck = new Regex("^(♦)+$");
+          Regex wincheck = new Regex("^(♦)+$");
+
+         Start:
+            string[] lines = File.ReadAllLines(@"..\..\..\dictionary.txt");
+            Random rand = new Random();
+
             Console.WriteLine("Witaj w grze w wisielca.");
             
             
-            string SelectedWord = "Słowo";
+            string SelectedWord = lines[rand.Next(lines.Length)];
             string CurrentWord = SelectedWord.ToLower();
+            CurrentWord = Regex.Replace(CurrentWord, "[^a-zA-Z0-9żółćęśąźń]", "♦");
             int visred = 0;
+            List<char> replet = new List<char>(); //repeated letters
 
             for (int miss = 0; miss < 7;)
             {
@@ -102,10 +115,15 @@ namespace Wisielec
                 {
                     visred = 0;
                     char CurrentLetter = Convert.ToChar(inputletter.ToLower());
-                    if (CurrentWord.IndexOf(CurrentLetter) != -1)
+                    if (!replet.Contains(CurrentLetter))
                     {
-                        CurrentWord = CurrentWord.Replace(CurrentLetter, '♦'); //mark all letters matching input (case insensitive)
+                        replet.Add(CurrentLetter);
+                        if (CurrentWord.IndexOf(CurrentLetter) != -1)
+                        {
+                            CurrentWord = CurrentWord.Replace(CurrentLetter, '♦'); //mark all letters matching input (case insensitive)
+                        }
                     }
+                    
                     else
                     {
                         miss += 1; //increase wrong answer counter 
@@ -125,18 +143,25 @@ namespace Wisielec
                     Console.ForegroundColor = (ConsoleColor)10;
                     Console.WriteLine("Wygrana :)");
                     Console.ResetColor();
+                    Console.WriteLine(SelectedWord);
                     Console.ReadLine();
                     Console.Clear();
                     goto Start;
-
                 }
             }
             Console.ForegroundColor = (ConsoleColor)12;
             Console.WriteLine("Przegrana :(");
             Console.ResetColor();
+            Console.WriteLine(SelectedWord);
             Console.ReadLine();
             Console.Clear();
             goto Start;
+        }
+
+        private static void Edit()
+        {
+            Console.WriteLine("Editor");
+
         }
        
     }
