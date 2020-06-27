@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
 
@@ -10,7 +11,7 @@ namespace Wisielec
     {
         static void Main()
         {
-            Regex wincheck = new Regex("^(♦)+$");
+           
             //Console.WriteLine("Wisielec wersja pre-alpha");
             //Console.WriteLine("");
             //Console.WriteLine("Wybierz opcję:");
@@ -19,8 +20,37 @@ namespace Wisielec
             //Console.WriteLine("");
             //Console.WriteLine("Wybrana opcja:");
             //int MainMenuSelection = int.Parse(Console.ReadLine());
-            Start:
+            Console.WriteLine("Wybierz opcję:");
+            do
+            {
+                PrintChoose();
+                int action = int.Parse(Console.ReadLine());
+                switch (action)
+                {
+                    case 1: Console.WriteLine("Roczynamy grę");
+                        Game();
+                        break;
+                    case 2: Console.WriteLine("Edycja słownika");
+                        break;
+                }
+            }
+            while (true);
+        }
+        private static void PrintChoose()
+        {
+             Console.WriteLine("1 - Rozpocznij grę");
+             Console.WriteLine("2 - Edytuj słownik");
+        }
+
+        private static void Game()
+        {
+
+       
+         Start: 
+            Regex wincheck = new Regex("^(♦)+$");
             Console.WriteLine("Witaj w grze w wisielca.");
+            
+            
             string SelectedWord = "Słowo";
             string CurrentWord = SelectedWord.ToLower();
             int visred = 0;
@@ -51,6 +81,7 @@ namespace Wisielec
 
                     }
                 }
+
                 Console.WriteLine();
 
                 switch (visred)
@@ -107,6 +138,7 @@ namespace Wisielec
             Console.Clear();
             goto Start;
         }
+       
     }
 }
 
